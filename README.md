@@ -6,6 +6,9 @@ Static, dependency-free site (HTML/CSS/JS). Bilingual SQ/EN via the toggle in th
 - `assets/css/style.css` — design system (ink / ivory / sand, champagne-gold accent; Cormorant Garamond + Jost)
 - `assets/js/main.js` — English translations, consultants list, search → kwalbania.kw.com, enquiry form (mailto), scroll reveals
 - `assets/` — logo, consultant photos, hero video and stills taken from it
+- `luksoze/` — luxury collection page · `realtoret/` — full team page · `en/` — redirect to `/?lang=en`
+
+Publishing to the Plesk hosting: see `DEPLOY.md` (automatic via `.github/workflows/deploy.yml`).
 
 Run locally: `python3 -m http.server` and open http://localhost:8000.
 Deploy: upload the folder to any static host (Netlify, Vercel, Cloudflare Pages, cPanel).

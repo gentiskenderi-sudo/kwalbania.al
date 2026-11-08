@@ -4,32 +4,59 @@
   var doc = document.documentElement;
   doc.classList.remove("no-js");
 
-  /* ---------------- Consultants (one list, rendered once) ---------------- */
-  var AGENTS = [
-    { name: "Altin Kaja", slug: "altin-kaja", id: "2000063083" },
-    { name: "Bledar Arapi", slug: "bledar-arapi", id: "2000055247" },
-    { name: "Dasantiela Demaj", slug: "dasantiela-demaj", id: "2000000624" },
-    { name: "Enea Jatagani", slug: "enea-jatagani", id: "2000000629" },
-    { name: "Jessica Pompa", slug: "jessica-pompa", id: "2000155135" },
-    { name: "Ledjan Mehmeti", slug: "ledjan-mehmeti", id: "855983" },
-    { name: "Orli Zotaj", slug: "orli-zotaj", id: "786510" },
-    { name: "Panajot Panajoti", slug: "panajot-panajoti", id: "787754" },
-    { name: "Radolf Oshafi", slug: "radolf-oshafi", id: "2000138224" }
+  /* ---------------- Consultants (one list for every page) ---------------- */
+  var LEADERS = [
+    { name: "Genti Skenderaj", slug: "genti-skenderaj", id: "754897", photo: true, role: "ad.l1role", roleSq: "Drejtor Operativ Rajonal", phone: "+355 67 200 3030", email: "genti.skenderaj@kwalbania.com" },
+    { name: "Ani Pistolja", slug: "ani-pistolja", id: "2000115189", photo: true, role: "ad.l2role", roleSq: "Administratore e Qendrës", phone: "+355 69 461 5510", email: "anipistolja@kwalbania.com" }
   ];
-  var grid = document.getElementById("agents");
-  if (grid) {
-    grid.innerHTML = AGENTS.map(function (a) {
-      return (
-        '<article class="agent reveal">' +
-          '<a href="https://kwalbania.kw.com/sq/agent/' + a.slug + "/" + a.id + '" target="_blank" rel="noopener">' +
-            '<figure class="agent__photo"><img src="assets/agents/' + a.slug + '.jpg" alt="' + a.name + '" loading="lazy" width="448" height="560"></figure>' +
-            '<h3 class="agent__name">' + a.name + "</h3>" +
-            '<p class="agent__role" data-i18n="ad.role">Konsulent · KW Albania</p>' +
-          "</a>" +
-        "</article>"
-      );
-    }).join("");
+  var AGENTS = [
+    { name: "Altin Kaja", slug: "altin-kaja", id: "2000063083", photo: true, phone: "+355 68 570 1551", email: "altinkaja@kwalbania.com" },
+    { name: "Arion Qafa", slug: "arion-qafa", id: "2000121878", phone: "+355 69 425 3451", email: "arionqafa@gmail.com" },
+    { name: "Artan Dervishaj", slug: "artan-dervishaj", id: "2000059849", phone: "+355 69 208 8882", email: "artandervishaj@kwalbania.com" },
+    { name: "Bledar Arapi", slug: "bledar-arapi", id: "2000055247", photo: true, phone: "+355 68 902 6510", email: "bledararapi@kwalbania.com" },
+    { name: "Dasantiela Demaj", slug: "dasantiela-demaj", id: "2000000624", photo: true, phone: "+355 69 535 0036", email: "dasantielademaj@kwalbania.com" },
+    { name: "Edmond Bejdo", slug: "edmond-bejdo", id: "2000108369", phone: "+355 68 403 2432", email: "edmondbejdo@kwalbania.com" },
+    { name: "Enea Jatagani", slug: "enea-jatagani", id: "2000000629", photo: true, phone: "+355 69 535 0679", email: "eneajatagani@kwalbania.com" },
+    { name: "Ilir Pustina", slug: "ilir-pustina", id: "2000036951", phone: "+355 68 207 9320", email: "ilirpustina@kwalbania.com" },
+    { name: "Jessica Pompa", slug: "jessica-pompa", id: "2000155135", photo: true, phone: "+971 58 583 6630", email: "jessicapompa@outlook.com" },
+    { name: "Kamela Hysa", slug: "kamela-hysa", id: "2000042706", phone: "+355 69 458 9580", email: "kamelahysa@kwalbania.com" },
+    { name: "Klaudia Lazaj", slug: "klaudia-lazaj", id: "2000158713", phone: "+355 68 262 9358", email: "klaudialazaj1@gmail.com" },
+    { name: "Ledjan Mehmeti", slug: "ledjan-mehmeti", id: "855983", photo: true, phone: "+355 69 285 1443", email: "ledjan.m@gmail.com" },
+    { name: "Orli Zotaj", slug: "orli-zotaj", id: "786510", photo: true, phone: "+355 67 201 6555", email: "orlizotaj@kwalbania.com" },
+    { name: "Panajot Panajoti", slug: "panajot-panajoti", id: "787754", photo: true, phone: "+355 68 203 0531", email: "panajotpanajoti@kwalbania.com" },
+    { name: "Radolf Oshafi", slug: "radolf-oshafi", id: "2000138224", photo: true, phone: "+355 69 636 3028", email: "radolfoshafi@kwalbania.com" }
+  ];
+
+  function initials(n) { return n.split(" ").map(function (w) { return w.charAt(0); }).join("").slice(0, 2); }
+  function profile(a) { return "https://kwalbania.kw.com/sq/agent/" + a.slug + "/" + a.id; }
+  function photo(a) {
+    return a.photo
+      ? '<img src="/assets/agents/' + a.slug + '.jpg" alt="' + a.name + '" loading="lazy" width="448" height="560">'
+      : '<span class="agent__initials" aria-hidden="true">' + initials(a.name) + "</span>";
   }
+  function card(a, withContact) {
+    var role = a.role
+      ? '<p class="agent__role" data-i18n="' + a.role + '">' + a.roleSq + "</p>"
+      : '<p class="agent__role" data-i18n="ad.role">Konsulent · KW Albania</p>';
+    var contact = withContact
+      ? '<p class="agent__contact"><a href="tel:' + a.phone.replace(/\s/g, "") + '">' + a.phone + '</a><a href="mailto:' + a.email + '">' + a.email + "</a></p>" +
+        '<a class="agent__link" href="' + profile(a) + '" target="_blank" rel="noopener" data-i18n="ad.profile">Shiko profilin</a>'
+      : "";
+    return (
+      '<article class="agent reveal">' +
+        '<a class="agent__main" href="' + profile(a) + '" target="_blank" rel="noopener">' +
+          '<figure class="agent__photo">' + photo(a) + "</figure>" +
+          '<h3 class="agent__name">' + a.name + "</h3>" + role +
+        "</a>" + contact +
+      "</article>"
+    );
+  }
+  var grid = document.getElementById("agents");
+  if (grid) grid.innerHTML = AGENTS.filter(function (a) { return a.photo; }).map(function (a) { return card(a, false); }).join("");
+  var leadGrid = document.getElementById("team-leaders");
+  if (leadGrid) leadGrid.innerHTML = LEADERS.map(function (a) { return card(a, true); }).join("");
+  var teamGrid = document.getElementById("team");
+  if (teamGrid) teamGrid.innerHTML = AGENTS.map(function (a) { return card(a, true); }).join("");
 
   /* ---------------- Translations ---------------- */
   var EN = {
@@ -98,9 +125,43 @@
     "ft.copy": "© 2026 KW Albania • Part of the Keller Williams network. All rights reserved.",
     "ft.src": "Market data: Keydata / Monitor (2026) · Bank of Albania (H2 2025) · ASHK (via Reporter.al)."
   };
+  var EN_MORE = {
+    "nav.luxury": "Luxury", "col.lux": "Luxury collection", "ad.profile": "View profile",
+    "lx.eyebrow": "KW Albania · Luxury Collection",
+    "lx.title": "Albania’s most <em>exceptional</em> homes",
+    "lx.lede": "Seafront villas, panoramic penthouses and residences in the heart of Tirana, represented with discretion and to an international standard.",
+    "lx.cta": "Request the private list",
+    "lx.introE": "Our philosophy",
+    "lx.introT": "A luxury property isn’t sold with an advert. <em>It’s sold with a story.</em>",
+    "lx.introB": "For every property in the collection we build a complete presentation: professional photography and video, materials in Albanian and English, and a curated list of buyers from Albania, the diaspora and the international Keller Williams network.",
+    "lx.p1t": "Discretion", "lx.p1d": "Private and off-market sales for owners who prefer no publicity. Viewings only with verified buyers.",
+    "lx.p2t": "Presentation", "lx.p2d": "Architectural photography, video and drone footage that give the property the value it deserves.",
+    "lx.p3t": "Global reach", "lx.p3d": "Your property reaches buyers in the diaspora and abroad through the Keller Williams network.",
+    "lx.colE": "The collection", "lx.colT": "Selected <em>properties</em>",
+    "lx.colI": "A selection of the most exceptional properties currently represented by KW Albania consultants.",
+    "lx.offE": "Private collection", "lx.offT": "Off-market properties",
+    "lx.offD": "Some properties are only sold privately. Ask your consultant for the off-market list.",
+    "lx.offC": "Request access",
+    "lx.dE": "Destinations", "lx.dT": "Where Albanian <em>luxury</em> lives",
+    "lx.d1": "Ionian Riviera", "lx.d1n": "Sarandë · Ksamil", "lx.d2": "Lungomare", "lx.d2n": "Vlorë",
+    "lx.d3": "Blloku & the Lake", "lx.d3n": "Tirana", "lx.avg": "average",
+    "lx.prE": "The process", "lx.prT": "How we sell <em>your property</em>",
+    "lx.pr1t": "Confidential valuation", "lx.pr1d": "A private meeting and a valuation based on comparable sales, with no obligation.",
+    "lx.pr2t": "Presentation", "lx.pr2d": "Professional photography, video and drone; listing materials in Albanian and English.",
+    "lx.pr3t": "Targeted marketing", "lx.pr3d": "Qualified buyers from Albania, the diaspora and the KW network, public or fully private.",
+    "lx.pr4t": "Negotiation & notary", "lx.pr4d": "We represent your interest at every step, through to the notary and cadastre registration.",
+    "lx.ctE": "Private consultation", "lx.ctT": "Selling or searching for <em>something exceptional?</em>",
+    "lx.ctB": "Tell us what you have in mind. A senior consultant will contact you personally and in complete confidence.",
+    "lx.o1": "I want to sell a luxury property", "lx.o2": "I want the private (off-market) list",
+    "lx.o3": "I want to buy", "lx.o4": "I want a confidential valuation",
+    "tm.eyebrow": "Our team", "tm.title": "KW Albania <em>consultants</em>",
+    "tm.lede": "Local professionals trained to global Keller Williams standards, ready to help you buy, sell or invest.",
+    "tm.lead": "Leadership", "tm.cons": "Consultants", "tm.consI": "Our local network of certified consultants."
+  };
+  Object.keys(EN_MORE).forEach(function (k) { EN[k] = EN_MORE[k]; });
   var EN_META = {
-    title: "KW Albania • Real estate with global quality",
-    desc: "Keller Williams Albania, part of the world’s largest real estate network. Buy, sell, rent or invest in Albania with certified local consultants."
+    title: document.body.getAttribute("data-title-en") || "KW Albania • Real estate with global quality",
+    desc: document.body.getAttribute("data-desc-en") || "Keller Williams Albania, part of the world’s largest real estate network. Buy, sell, rent or invest in Albania with certified local consultants."
   };
 
   var nodes = Array.prototype.slice.call(document.querySelectorAll("[data-i18n]"));
@@ -158,8 +219,8 @@
     shkoder: "42.105,19.562,42.031,19.462"
   };
   var search = document.getElementById("search");
-  var S = search.elements;
-  search.addEventListener("submit", function (e) {
+  if (search) search.addEventListener("submit", function (e) {
+    var S = search.elements;
     e.preventDefault();
     var offer = S.offer.value === "rent" ? "rent" : "sale";
     var url = "https://kwalbania.kw.com/search/" + offer + "?viewport=" + encodeURIComponent(VIEWPORTS[S.loc.value] || VIEWPORTS.all);
@@ -170,8 +231,8 @@
   /* ---------------- Enquiry form (mailto) ---------------- */
   var form = document.getElementById("enquiry");
   var err = document.getElementById("f-error");
-  var F = form.elements;
-  form.addEventListener("submit", function (e) {
+  if (form) form.addEventListener("submit", function (e) {
+    var F = form.elements;
     e.preventDefault();
     var name = F.name.value.trim(), phone = F.phone.value.trim(), email = F.email.value.trim();
     var okEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -189,7 +250,7 @@
       "",
       F.message.value.trim()
     ].join("\n");
-    location.href = "mailto:info@kwalbania.al?subject=" + encodeURIComponent("KW Albania · " + intent) + "&body=" + encodeURIComponent(body);
+    location.href = "mailto:info@kwalbania.al?subject=" + encodeURIComponent((form.getAttribute("data-subject") || "KW Albania") + " · " + intent) + "&body=" + encodeURIComponent(body);
   });
 
   /* ---------------- Reveal on scroll ---------------- */
